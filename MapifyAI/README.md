@@ -1,4 +1,4 @@
-[![MapifyAI](images/cover.jpg)
+![MapifyAI](cover.jpg)
 # MapifyAI
 From a Audio or Transcription to Mind-Map Diagram with this AI-powered tool.
 This Application allows from an Audio or Transcription concerning a discussion, a meeting, etc ... to generate a "_meaningful mind-map diagram_", that represent the touched key points. 
