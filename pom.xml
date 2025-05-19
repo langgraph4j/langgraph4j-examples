@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.bsc.langgraph4j</groupId>
+  <artifactId>langgraph4j-examples</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>langgraph4j::examples</name>
+  <url>https://github.com/langgraph4j/langgraph4j-examples</url>
+  <description>Langgraph4j examples</description>
+  <licenses>
+    <license>
+      <name>MIT</name>
+      <url>https://opensource.org/license/mit</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>bsorrentino</id>
+      <name>Bartolomeo Sorrentino</name>
+      <email>bartolomeo.sorrentino@gmail.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git: https://github.com/langgraph4j/langgraph4j-examples.git </connection>
+    <developerConnection>scm:git: https://github.com/langgraph4j/langgraph4j-examples.git </developerConnection>
+    <url> https://github.com/langgraph4j/langgraph4j-examples</url>
+    <tag>HEAD</tag>
+  </scm>
+  <issueManagement>
+    <system>github</system>
+    <url> https://github.com/langgraph4j/langgraph4j-examples/issues</url>
+  </issueManagement>
+
+  <properties>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>2.0.9</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-jdk14</artifactId>
+        <version>2.0.9</version> <!-- Use the latest version -->
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.10.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+ </build>
+
+  <modules>
+    <module>agents-handoff/langchain4j</module>
+    <module>agents-handoff/springai</module>
+    <module>image-to-diagram</module>
+    <module>adaptive-rag</module>
+    <module>MapifyAI</module>
+  </modules>
+
+</project>

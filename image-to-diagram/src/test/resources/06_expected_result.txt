@@ -1,0 +1,8 @@
+@startuml
+allowmixing
+rectangle MyFriend
+actor Alice
+actor Jack
+rectangle Bob
+Bob --> Alice : hello
+@enduml
