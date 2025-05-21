@@ -5,11 +5,11 @@
 
 | Project         | Integrated With        
 |--------------|----------------| 
-[Agent Handoff](agents-handoff/springai) |  [Spring AI]
-[Agent handoff](agents-handoff/langchain4j) |  [Langchain4j][langchain4j]
-[Image To PlantUML Diagram](image-to-diagram)   | [Langchain4j][langchain4j]
-[Adaptive RAG](adaptive-rag) | [Langchain4j][langchain4j]
-[From a Audio/Transcription to Mind-Map](MapifyAI) | [langchain4j]
+[Agent Handoff](spring-ai/agents-handoff) |  [Spring AI]
+[Agent handoff](langchain4j/agents-handoff) |  [Langchain4j]
+[Image To PlantUML Diagram](langchain4j/image-to-diagram)   | [Langchain4j]
+[Adaptive RAG](langchain4j/adaptive-rag) | [Langchain4j]
+[From a Audio/Transcription to Mind-Map](langchain4j/MapifyAI) | [Langchain4j]
 
 
 [Jetty]: https://jetty.org

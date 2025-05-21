@@ -65,11 +65,11 @@
  </build>
 
   <modules>
-    <module>agents-handoff/langchain4j</module>
-    <module>agents-handoff/springai</module>
-    <module>image-to-diagram</module>
-    <module>adaptive-rag</module>
-    <module>MapifyAI</module>
+    <module>langchain4j/agents-handoff</module>
+    <module>langchain4j/image-to-diagram</module>
+    <module>langchain4j/adaptive-rag</module>
+    <module>langchain4j/MapifyAI</module>
+    <module>spring-ai/agents-handoff</module>
   </modules>
 
 </project>
