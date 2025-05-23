@@ -100,7 +100,7 @@ public class ImageToDiagramTest {
 
         assertNotNull(imageData);
 
-        var imageUrlOrData = ImageToDiagramProcess.ImageUrlOrData.of( new URI("https://blog.langchain.dev/content/images/2024/01/supervisor-diagram.png")  );
+        var imageUrlOrData = ImageToDiagramWorkflow.ImageUrlOrData.of( new URI("https://blog.langchain.dev/content/images/2024/01/supervisor-diagram.png")  );
 
         ImageContent imageContent = (imageUrlOrData.url()!=null) ?
                 ImageContent.from(imageUrlOrData.url(), ImageContent.DetailLevel.AUTO) :
@@ -136,13 +136,13 @@ public class ImageToDiagramTest {
     @Test
     public void imageToDiagram() throws Exception {
 
-        var agentExecutor = new ImageToDiagramProcess();
+        var agentExecutor = new ImageToDiagramWorkflow();
 
         var imageData = ImageLoader.loadImageAsBase64( "LangChainAgents.png" );
 
         assertNotNull(imageData);
 
-        var result = agentExecutor.executeWithCorrection( ImageToDiagramProcess.ImageUrlOrData.of(imageData) );
+        var result = agentExecutor.executeWithCorrection( ImageToDiagramWorkflow.ImageUrlOrData.of(imageData) );
 
         var diagramCode = result.stream().reduce( (out1, out2) -> out2 )
                 .map( NodeOutput::state )
@@ -160,7 +160,7 @@ public class ImageToDiagramTest {
 
         final var expectedCode = readTextResource(format("%s_expected_result.txt", diagramId));
 
-        final var process = new DiagramCorrectionProcess();
+        final var process = new DiagramCorrectionWorkflow();
 
         ArrayList<NodeOutput<ImageToDiagram.State>> list = new ArrayList<NodeOutput<ImageToDiagram.State>>();
         var result = process.workflow().compile().stream( Map.of( "diagramCode", diagramCode ) )
@@ -213,7 +213,7 @@ public class ImageToDiagramTest {
 
     @Test
     public void getGraph() throws Exception {
-        var agentExecutor = new ImageToDiagramProcess();
+        var agentExecutor = new ImageToDiagramWorkflow();
 
         var plantUml = agentExecutor.workflow()
                 .getGraph( GraphRepresentation.Type.PLANTUML,
@@ -251,7 +251,7 @@ public class ImageToDiagramTest {
         expected_workflow_with_correction = readTextResource("02_expected_mermaid.txt");
         assertEquals( expected_workflow_with_correction, mermaidWithCorrection.content() );
 
-        var correctionProcess = new DiagramCorrectionProcess();
+        var correctionProcess = new DiagramCorrectionWorkflow();
 
         var correctionPlantUml = correctionProcess.workflow().getGraph( GraphRepresentation.Type.MERMAID,
                         "Correction Process",

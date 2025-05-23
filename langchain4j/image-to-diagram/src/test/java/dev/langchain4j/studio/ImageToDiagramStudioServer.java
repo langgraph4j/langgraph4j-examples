@@ -1,7 +1,7 @@
 package dev.langchain4j.studio;
 
 import dev.langchain4j.DotEnvConfig;
-import dev.langchain4j.image_to_diagram.ImageToDiagramProcess;
+import dev.langchain4j.image_to_diagram.ImageToDiagramWorkflow;
 import org.bsc.langgraph4j.GraphRepresentation;
 import org.bsc.langgraph4j.studio.jetty.LangGraphStreamingServerJetty;
 
@@ -17,7 +17,7 @@ public class ImageToDiagramStudioServer {
 
         // var imageData = ImageLoader.loadImageAsBase64( "LangChainAgents.png" );
 
-        var agentExecutor = new ImageToDiagramProcess();
+        var agentExecutor = new ImageToDiagramWorkflow();
 
         var workflow = agentExecutor.workflowWithCorrection();
 

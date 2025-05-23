@@ -9,6 +9,7 @@ import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.action.AsyncEdgeAction;
 import org.bsc.langgraph4j.action.AsyncNodeAction;
 import org.bsc.langgraph4j.serializer.StateSerializer;
+import org.bsc.langgraph4j.utils.EdgeMappings;
 
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import static org.bsc.langgraph4j.action.AsyncEdgeAction.edge_async;
 /**
  * Represents the process for correcting diagrams from images using asynchronous node and edge actions.
  */
-public class DiagramCorrectionProcess implements ImageToDiagram {
+public class DiagramCorrectionWorkflow implements ImageToDiagram {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger("DiagramCorrectionProcess");
 
@@ -51,12 +52,11 @@ public class DiagramCorrectionProcess implements ImageToDiagram {
                 .addEdge("agent_review", "evaluate_result")
                 .addConditionalEdges("evaluate_result",
                         routeEvaluationResult,
-                        Map.of(
-                                "OK", END,
-                                "ERROR", "agent_review",
-                                "UNKNOWN", END
-                        )
-                )
+                        EdgeMappings.builder()
+                                .toEND("OK" )
+                                .toEND( "UNKNOWN" )
+                                .to( "agent_review","ERROR" )
+                                .build())
                 .addEdge(START, "evaluate_result");
     }
 

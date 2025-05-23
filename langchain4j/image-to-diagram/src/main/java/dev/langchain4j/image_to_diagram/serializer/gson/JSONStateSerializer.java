@@ -2,7 +2,7 @@ package dev.langchain4j.image_to_diagram.serializer.gson;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import dev.langchain4j.image_to_diagram.ImageToDiagramProcess;
+import dev.langchain4j.image_to_diagram.ImageToDiagramWorkflow;
 import dev.langchain4j.image_to_diagram.state.Diagram;
 import dev.langchain4j.image_to_diagram.ImageToDiagram;
 import net.sourceforge.plantuml.ErrorUmlType;
@@ -45,12 +45,12 @@ class StateDeserializer implements JsonDeserializer<ImageToDiagram.State> {
         if( imageDataElement != null ) {
             if( imageDataElement.isJsonPrimitive()  ) {
                 var base64 = imageDataElement.getAsString();
-                var imageData = ImageToDiagramProcess.ImageUrlOrData.of(base64);
+                var imageData = ImageToDiagramWorkflow.ImageUrlOrData.of(base64);
                 data.put( "imageData", imageData );
             }
             else if ( imageDataElement.isJsonObject() ) {
                 var imageUrlOrData = imageDataElement.getAsJsonObject();
-                var imageData = gson.fromJson(imageUrlOrData, new TypeToken<ImageToDiagramProcess.ImageUrlOrData>() {
+                var imageData = gson.fromJson(imageUrlOrData, new TypeToken<ImageToDiagramWorkflow.ImageUrlOrData>() {
                 }.getType());
                 data.put("imageData", imageData);
             }

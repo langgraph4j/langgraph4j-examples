@@ -8,6 +8,7 @@ import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.NodeOutput;
 import org.bsc.langgraph4j.action.AsyncEdgeAction;
 import org.bsc.langgraph4j.action.AsyncNodeAction;
+import org.bsc.langgraph4j.utils.EdgeMappings;
 
 import java.net.URI;
 import java.util.*;
@@ -19,7 +20,7 @@ import static org.bsc.langgraph4j.action.AsyncNodeAction.node_async;
 /**
  * Class for processing images to generate diagrams.
  */
-public class ImageToDiagramProcess implements ImageToDiagram {
+public class ImageToDiagramWorkflow implements ImageToDiagram {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger("ImageToDiagramProcess");
     /**
@@ -83,8 +84,10 @@ public class ImageToDiagramProcess implements ImageToDiagram {
                 //.addNode( "evaluate_result", evaluateResult )
                 .addConditionalEdges("agent_describer",
                         routeDiagramTranslation,
-                        Map.of( "sequence", "agent_sequence_plantuml",
-                                "generic", "agent_generic_plantuml" )
+                        EdgeMappings.builder()
+                                .to( "agent_sequence_plantuml", "sequence" )
+                                .to( "agent_generic_plantuml" , "generic" )
+                                .build()
                 )
                 //.addEdge("agent_sequence_plantuml", "evaluate_result")
                 //.addEdge("agent_generic_plantuml", "evaluate_result")
@@ -107,7 +110,7 @@ public class ImageToDiagramProcess implements ImageToDiagram {
 
         var stateSerializer = new JSONStateSerializer();
 
-        var diagramCorrectionProcess = new DiagramCorrectionProcess().workflow(stateSerializer).compile();
+        var diagramCorrectionProcess = new DiagramCorrectionWorkflow().workflow(stateSerializer).compile();
 
         return new StateGraph<>(State.SCHEMA,stateSerializer)
                 .addNode("agent_describer", describeDiagramImage  )
@@ -116,8 +119,10 @@ public class ImageToDiagramProcess implements ImageToDiagram {
                 .addNode( "evaluate_result", diagramCorrectionProcess )
                 .addConditionalEdges("agent_describer",
                         routeDiagramTranslation,
-                        Map.of( "sequence", "agent_sequence_plantuml",
-                                "generic", "agent_generic_plantuml" )
+                        EdgeMappings.builder()
+                                .to( "agent_sequence_plantuml", "sequence" )
+                                .to( "agent_generic_plantuml" , "generic" )
+                                .build()
                 )
                 .addEdge("agent_sequence_plantuml", "evaluate_result")
                 .addEdge("agent_generic_plantuml", "evaluate_result")

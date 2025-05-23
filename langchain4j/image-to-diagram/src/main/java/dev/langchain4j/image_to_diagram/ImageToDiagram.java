@@ -5,7 +5,6 @@ import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import net.sourceforge.plantuml.ErrorUmlType;
 import org.bsc.langgraph4j.state.AgentState;
-import org.bsc.langgraph4j.state.AppenderChannel;
 import org.bsc.langgraph4j.state.Channel;
 import org.bsc.langgraph4j.state.Channels;
 
@@ -41,11 +40,11 @@ public interface ImageToDiagram {
         }
 
         /**
-         * Retrieves the image data as an {@link ImageToDiagramProcess.ImageUrlOrData}.
+         * Retrieves the image data as an {@link ImageToDiagramWorkflow.ImageUrlOrData}.
          *
          * @return An {@link Optional} containing the image data, or empty if not available.
          */
-        public Optional<ImageToDiagramProcess.ImageUrlOrData> imageData() {
+        public Optional<ImageToDiagramWorkflow.ImageUrlOrData> imageData() {
             return value("imageData");
         }
         /**
@@ -66,11 +65,11 @@ public interface ImageToDiagram {
             return this.<List<String>>value("diagramCode").orElseGet(Collections::emptyList);
         }
         /**
-        * Retrieves the evaluation result as an {@link ImageToDiagramProcess.EvaluationResult}.
+        * Retrieves the evaluation result as an {@link ImageToDiagramWorkflow.EvaluationResult}.
         * 
         * @return An {@link Optional} containing the evaluation result, or empty if not available.
         */
-        public Optional<ImageToDiagramProcess.EvaluationResult> evaluationResult() {
+        public Optional<ImageToDiagramWorkflow.EvaluationResult> evaluationResult() {
             return value("evaluationResult" );
         }
         /**

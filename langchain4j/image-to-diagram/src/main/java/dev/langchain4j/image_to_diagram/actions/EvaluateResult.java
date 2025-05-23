@@ -1,6 +1,6 @@
 package dev.langchain4j.image_to_diagram.actions;
 
-import dev.langchain4j.image_to_diagram.DiagramCorrectionProcess;
+import dev.langchain4j.image_to_diagram.DiagramCorrectionWorkflow;
 import dev.langchain4j.image_to_diagram.ImageToDiagram;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import org.bsc.langgraph4j.NodeOutput;
@@ -33,7 +33,7 @@ public class EvaluateResult implements AsyncNodeAction<ImageToDiagram.State> {
     }
 
     /**
-     * Converts an ImageToDiagram state to a diagram using the {@link DiagramCorrectionProcess}.
+     * Converts an ImageToDiagram state to a diagram using the {@link DiagramCorrectionWorkflow}.
      * This method processes the input state asynchronously and returns a {@link CompletableFuture} with
      * the resulting diagram data. If no results are generated, it throws a {@link RuntimeException}.
      *
@@ -45,7 +45,7 @@ public class EvaluateResult implements AsyncNodeAction<ImageToDiagram.State> {
     public CompletableFuture<Map<String, Object>> apply(ImageToDiagram.State state) {
         CompletableFuture<Map<String, Object>> result = new CompletableFuture<>();
 
-        DiagramCorrectionProcess diagramCorrectionProcess = new DiagramCorrectionProcess();
+        DiagramCorrectionWorkflow diagramCorrectionProcess = new DiagramCorrectionWorkflow();
 
         ArrayList<NodeOutput<ImageToDiagram.State>> list = new ArrayList<NodeOutput<ImageToDiagram.State>>();
         try {
