@@ -70,6 +70,9 @@
     <module>image-to-diagram</module>
     <module>adaptive-rag</module>
     <module>MapifyAI</module>
+
+    <!-- LangGraph4j with Spring AI examples -->
+    <module>spring-ai/langgraph4j-springai-example-helloworld</module>
   </modules>
 
 </project>
