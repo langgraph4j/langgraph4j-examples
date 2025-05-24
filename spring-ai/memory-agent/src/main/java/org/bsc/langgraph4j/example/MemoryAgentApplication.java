@@ -4,6 +4,7 @@ package org.bsc.langgraph4j.example;
 import org.bsc.langgraph4j.RunnableConfig;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.content.Content;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,10 +13,10 @@ import org.springframework.context.annotation.Bean;
 import java.util.Map;
 
 @SpringBootApplication
-public class Main {
+public class MemoryAgentApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(MemoryAgentApplication.class, args);
     }
 
     @Bean
@@ -30,15 +31,21 @@ public class Main {
             var state = workflow.invoke(
                     Map.of("messages", new UserMessage("Hi，I'm LangGraph4j!")),
                     runnableConfig
-            ).get();
-            System.out.println(state);
+            ).orElseThrow();
+
+            System.out.println(
+                    state.lastMessage().map(Content::getText).orElse("UNKNOWN")
+            ); // It can be seen here that the historical messages have been stored
 
             // conversation-1: step 2
             state = workflow.invoke(
                     Map.of("messages", new UserMessage("Who am I？")),
                     runnableConfig
-            ).get();
-            System.out.println(state); // It can be seen here that the historical messages have been stored
+            ).orElseThrow();
+
+            System.out.println(
+                    state.lastMessage().map(Content::getText).orElse("UNKNOWN")
+            ); // It can be seen here that the historical messages have been stored
 
             // other conversation
             conversationId = "conversation-2";
@@ -46,8 +53,11 @@ public class Main {
             state = workflow.invoke(
                     Map.of("messages", new UserMessage("Do you know my name?")),
                     runnableConfig
-            ).get();
-            System.out.println(state); // As can be seen here, since it is a new conversation, there are no historical messages
+            ).orElseThrow();
+
+            System.out.println(
+                    state.lastMessage().map(Content::getText).orElse("UNKNOWN")
+            ); // As can be seen here, since it is a new conversation, there are no historical messages
         };
     }
 

@@ -72,7 +72,7 @@
 
     <!-- LangGraph4j with Spring AI examples -->
     <module>spring-ai/agents-handoff</module>
-    <module>spring-ai/helloworld</module>
+    <module>spring-ai/memory-agent</module>
   </modules>
 
 </project>

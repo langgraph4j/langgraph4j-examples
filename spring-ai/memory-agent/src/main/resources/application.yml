@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    active: ollama
+    #default: openai
+
+---
+# OpenAI Profile
+spring:
+  profiles:
+    activate:
+      on-profile: openai
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:your OpenAI api key}
+      # You can add other OpenAI specific configurations here if needed
+      # chat:
+      #   options:
+      #     model: gpt-4o-mini
+      #     temperature: 0.7
+
+---
+# Ollama Profile
+spring:
+  config:
+    activate:
+      on-profile: ollama
+  ai:
+    ollama:
+      base-url: http://localhost:11434 # Default Ollama server URL
+      chat:
+        options:
+          model: llama3.1 # Specify your default Ollama model here
+          # You can add other Ollama-specific options if needed, for example:
+          # temperature: 0.7
+          # top-k: 50
+#      embedding: # Uncomment and configure if you want to use Ollama for embeddings under this profile
+#        options:
+#          model: name-of-your-ollama-embedding-model # e.g., nomic-embed-text model: name-of-your-ollama-embedding-model # e.g., nomic-embed-text
