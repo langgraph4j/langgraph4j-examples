@@ -4,12 +4,12 @@
     <parent>
         <groupId>org.bsc.langgraph4j</groupId>
         <artifactId>langgraph4j-parent</artifactId>
-        <version>1.5.12</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
 
-    <artifactId>langgraph4j-lc4j-mcp</artifactId>
+    <artifactId>langgraph4j-lc4j-mcp-client-agent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>langgraph4j::examples::mcp::langchain4j</name>
+    <name>langgraph4j::examples::mcp-client-agent::langchain4j</name>
     <description>Sample project of Langgraph4j and MCP integration using langchain4j</description>
 
     <properties>
@@ -22,15 +22,10 @@
 
         <dependency>
             <groupId>org.bsc.langgraph4j</groupId>
-            <artifactId>langgraph4j-core</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bsc.langgraph4j</groupId>
             <artifactId>langgraph4j-agent-executor</artifactId>
             <version>${parent.version}</version>
         </dependency>
+
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
@@ -46,15 +41,18 @@
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-mcp</artifactId>
+            <version>${langchain4j.beta}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-ollama</artifactId>
             <version>${langchain4j.beta}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
             <version>${langchain4j.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -99,8 +97,16 @@
                         <exclude>**/*ITest.java</exclude>
                     </excludes>
                 </configuration>
-            </plugin> 
+            </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>org.bsc.langgraph4j.mcp.MCPClientAgent</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     

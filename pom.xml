@@ -69,6 +69,7 @@
     <module>langchain4j/image-to-diagram</module>
     <module>langchain4j/adaptive-rag</module>
     <module>langchain4j/MapifyAI</module>
+    <module>langchain4j/mcp-client-agent</module>
 
     <!-- LangGraph4j with Spring AI examples -->
     <module>spring-ai/agents-handoff</module>
