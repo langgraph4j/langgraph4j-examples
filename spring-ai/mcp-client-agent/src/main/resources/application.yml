@@ -1,7 +1,13 @@
 spring:
   profiles:
-    active: ollama
-    #default: openai
+    #active: openai
+    #active: ollama
+    default: ollama, console
+  main:
+    # console app
+    #web-application-type: none
+    # studio
+    #web-application-type: servlet
   ai:
     mcp:
       client:
