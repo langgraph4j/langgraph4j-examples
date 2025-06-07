@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.bsc.langgraph4j</groupId>
         <artifactId>langgraph4j-parent</artifactId>
-        <version>1.5.12</version>
+        <version>1.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>langgraph4j-springai-agent-handoff</artifactId>
@@ -106,5 +106,19 @@
 
         </plugins>
     </build>
+    
+    <repositories>
+        <repository>
+            <id>sonatype-server</id>
+            <name>sonatype snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
     
 </project>
