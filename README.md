@@ -5,8 +5,8 @@
 
 ### Integrated with [Langchain4j]
 
-* [Agent using MCP](langchain4j/mcp-client-agent)
 * [Agent handoff](langchain4j/agents-handoff)
+* [Agent using MCP](langchain4j/mcp-client-agent)
 * [Image To PlantUML Diagram](langchain4j/image-to-diagram)
 * [Adaptive RAG](langchain4j/adaptive-rag)
 * [From a Audio/Transcription to Mind-Map](langchain4j/MapifyAI)
