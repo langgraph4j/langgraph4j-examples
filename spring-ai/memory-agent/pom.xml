@@ -18,7 +18,7 @@
 
         <spring-boot.version>3.4.5</spring-boot.version>
         <spring-ai.version>1.0.0</spring-ai.version>
-        <langgraph4j.version>1.5.12</langgraph4j.version>
+        <langgraph4j.version>1.6-SNAPSHOT</langgraph4j.version>
     </properties>
 
     <dependencies>
@@ -81,4 +81,19 @@
             </dependencies>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>sonatype-server</id>
+            <name>sonatype snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
 </project>
