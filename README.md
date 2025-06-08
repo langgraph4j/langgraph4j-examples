@@ -3,13 +3,20 @@
 
 ## Examples
 
-| Project         | Integrated With        
-|--------------|----------------| 
-[Agent Handoff](spring-ai/agents-handoff) |  [Spring AI]
-[Agent handoff](langchain4j/agents-handoff) |  [Langchain4j]
-[Image To PlantUML Diagram](langchain4j/image-to-diagram)   | [Langchain4j]
-[Adaptive RAG](langchain4j/adaptive-rag) | [Langchain4j]
-[From a Audio/Transcription to Mind-Map](langchain4j/MapifyAI) | [Langchain4j]
+### Integrated with [Langchain4j]
+
+* [Agent using MCP](langchain4j/mcp-client-agent)
+* [Agent handoff](langchain4j/agents-handoff)
+* [Image To PlantUML Diagram](langchain4j/image-to-diagram)
+* [Adaptive RAG](langchain4j/adaptive-rag)
+* [From a Audio/Transcription to Mind-Map](langchain4j/MapifyAI)
+
+
+### Integrated with [Spring AI]
+
+* [Agent Handoff](spring-ai/agents-handoff)
+* [Agent using MCP](spring-ai/mcp-client-agent)
+* [Agent with Memory](spring-ai/memory-agent)
 
 
 [Jetty]: https://jetty.org
