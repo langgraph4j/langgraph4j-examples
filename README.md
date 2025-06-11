@@ -3,6 +3,11 @@
 
 ## Examples
 
+### Reference Implementation 
+
+* [Agent Q&A](reference-impl/agent-q&a)
+   > Human-in-the-Loop use case , using interruption and resume through Checkpoints.
+
 ### Integrated with [Langchain4j]
 
 * [Agent handoff](langchain4j/agents-handoff)

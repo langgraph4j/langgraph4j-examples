@@ -1,0 +1,30 @@
+## REST Client Test for Chat Service
+## VSCode Plugin: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+POST http://localhost:8080/chat HTTP/1.1
+Content-Type: application/json
+
+{
+  "message": "What's the weather today?"
+}
+
+###
+
+POST http://localhost:8080/chat HTTP/1.1
+Content-Type: application/json
+
+{
+    "sessionId": "...",
+    "message": "Germany"
+}
+
+### 
+
+POST http://localhost:8080/chat HTTP/1.1
+Content-Type: application/json
+
+{
+    "sessionId": "...",
+    "message": "Berlin"
+}
+
+

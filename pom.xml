@@ -65,6 +65,9 @@
  </build>
 
   <modules>
+    <module><![CDATA[reference-impl/agent-q&a]]></module>
+
+
     <module>langchain4j/agents-handoff</module>
     <module>langchain4j/image-to-diagram</module>
     <module>langchain4j/adaptive-rag</module>
