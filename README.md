@@ -5,7 +5,7 @@
 
 ### Reference Implementation 
 
-* [Agent Q&A](reference-impl/agent-q&a)
+* [Agent Q&A](reference/agent-q&a)
    > Human-in-the-Loop use case , using interruption and resume through Checkpoints.
 
 ### Integrated with [Langchain4j]

@@ -65,7 +65,7 @@
  </build>
 
   <modules>
-    <module><![CDATA[reference-impl/agent-q&a]]></module>
+    <module><![CDATA[reference/agent-q&a]]></module>
 
 
     <module>langchain4j/agents-handoff</module>
