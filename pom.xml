@@ -75,6 +75,7 @@
     <module>langchain4j/mcp-client-agent</module>
 
     <!-- LangGraph4j with Spring AI examples -->
+    <module>spring-ai/a2a-server-implby-a2a4j</module>
     <module>spring-ai/agents-handoff</module>
     <module>spring-ai/memory-agent</module>
     <module>spring-ai/mcp-client-agent</module>
