@@ -19,6 +19,7 @@
 
 ### Integrated with [Spring AI]
 
+* [A2A Server implementation by A2A4j](spring-ai/a2a-server-implby-a2a4j)
 * [Agent Handoff](spring-ai/agents-handoff)
 * [Agent using MCP](spring-ai/mcp-client-agent)
 * [Agent with Memory](spring-ai/memory-agent)
