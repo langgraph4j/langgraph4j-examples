@@ -1,8 +1,8 @@
-
 servlet:
   port: 8080
 
 spring:
   ai:
     openai:
-      api-key: { your openai api-key }
+      # Reads the API key from the OPENAI_API_KEY environment variable
+      api-key: ${OPENAI_API_KEY}
