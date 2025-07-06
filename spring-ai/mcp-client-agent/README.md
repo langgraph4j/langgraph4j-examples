@@ -1,5 +1,6 @@
 ## MCP Client Agent
-> Langgraph4j and MCP integration using Spring AI
+> Langgraph4j and MCP integration using [Spring AI](https://spring.io/projects/spring-ai) and [mcp/postgres](https://hub.docker.com/mcp/server/postgres/overview)
+
 
 ### Getting Started
 
@@ -33,3 +34,8 @@ mvn package spring-boot:run@console -Popenai
 ```
 mvn package spring-boot:run@studio -Popenai
 ```
+
+## References
+
+* [Find awesome MCP ](https://mcp.so)
+* [MCP Hub](https://hub.docker.com/mcp)
