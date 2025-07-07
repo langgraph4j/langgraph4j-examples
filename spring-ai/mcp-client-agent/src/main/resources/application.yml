@@ -12,14 +12,16 @@ spring:
     mcp:
       client:
         enabled: true
-        name: postgres
+        name: myClient
         version: 1.0.0
         request-timeout: 30s
         type: SYNC  # or ASYNC for reactive applications
+#        sse:
+#          connections:
         stdio:
           root-change-notification: false
           connections:
-            server1:
+            postgres:
               command: docker
               args:
                 - run
@@ -27,6 +29,24 @@ spring:
                 - --rm
                 - mcp/postgres
                 - postgresql://admin:bsorrentino@host.docker.internal:5432/mcp_db
+              env:
+                DEBUG: true
+#            time:
+#              command: docker
+#              args:
+#                - run
+#                - -i
+#                - --rm
+#                - mcp/time
+#              env:
+#                DEBUG: true
+            airbnb:
+              command: docker
+              args:
+                - run
+                - -i
+                - --rm
+                - mcp/openbnb-airbnb
               env:
                 DEBUG: true
 

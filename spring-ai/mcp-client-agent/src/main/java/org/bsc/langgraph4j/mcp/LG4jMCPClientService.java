@@ -66,8 +66,13 @@ public class LG4jMCPClientService {
                         """
         );
 
+        var mcpSyncClientPostgres = mcpSyncClient.stream()
+                .filter( client -> Objects.equals(client.getClientInfo().name(), "myClient - postgres") )
+                .findAny()
+                .orElseThrow();
+
         return prompt.create(
-                Map.of("schema", readDBSchemaAsString(mcpSyncClient.get(0)) ) )
+                Map.of("schema", readDBSchemaAsString(mcpSyncClientPostgres) ) )
                 .getContents();
 
     }
