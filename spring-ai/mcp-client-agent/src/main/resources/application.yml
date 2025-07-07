@@ -1,13 +1,9 @@
 spring:
   profiles:
-    #active: openai
-    #active: ollama
-    default: ollama, console
+    default: ollama
   main:
-    # console app
-    #web-application-type: none
     # studio
-    #web-application-type: servlet
+    web-application-type: servlet
   ai:
     mcp:
       client:
@@ -31,15 +27,6 @@ spring:
                 - postgresql://admin:bsorrentino@host.docker.internal:5432/mcp_db
               env:
                 DEBUG: true
-#            time:
-#              command: docker
-#              args:
-#                - run
-#                - -i
-#                - --rm
-#                - mcp/time
-#              env:
-#                DEBUG: true
             airbnb:
               command: docker
               args:

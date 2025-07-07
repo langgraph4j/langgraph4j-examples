@@ -82,6 +82,7 @@ public class LG4jMCPClientService {
         return AgentExecutorEx.builder()
                 .chatModel(chatModel)
                 .tools(new SyncMcpToolCallbackProvider(mcpSyncClient)) // add tools directly from MCP client
+                .toolsFromObject( new TestTool() )
                 .defaultSystem( getSystemMessageWithDBSchema() )
                 .build();
 
