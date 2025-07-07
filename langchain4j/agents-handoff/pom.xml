@@ -113,9 +113,9 @@
 
     <repositories>
         <repository>
-            <id>sonatype-server</id>
+            <id>sonatype-central</id>
             <name>sonatype snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
