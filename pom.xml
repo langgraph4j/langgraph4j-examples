@@ -73,6 +73,7 @@
     <module>langchain4j/adaptive-rag</module>
     <module>langchain4j/MapifyAI</module>
     <module>langchain4j/mcp-client-agent</module>
+    <module>langchain4j/aiservices</module>
 
     <!-- LangGraph4j with Spring AI examples -->
     <module>spring-ai/a2a-server-implby-a2a4j</module>

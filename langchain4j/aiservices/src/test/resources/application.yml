@@ -1,0 +1,6 @@
+spring:
+  main:
+    # console app
+    web-application-type: none
+    # studio
+    #web-application-type: servlet
