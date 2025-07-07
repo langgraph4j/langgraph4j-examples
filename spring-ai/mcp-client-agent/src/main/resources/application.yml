@@ -1,34 +1,9 @@
 spring:
   profiles:
-    #active: openai
-    #active: ollama
-    default: ollama, console
+    default: ollama
   main:
-    # console app
-    #web-application-type: none
     # studio
-    #web-application-type: servlet
-  ai:
-    mcp:
-      client:
-        enabled: true
-        name: postgres
-        version: 1.0.0
-        request-timeout: 30s
-        type: SYNC  # or ASYNC for reactive applications
-        stdio:
-          root-change-notification: false
-          connections:
-            server1:
-              command: docker
-              args:
-                - run
-                - -i
-                - --rm
-                - mcp/postgres
-                - postgresql://admin:bsorrentino@host.docker.internal:5432/mcp_db
-              env:
-                DEBUG: true
+    web-application-type: servlet
 
 ---
 # OpenAI Profile
