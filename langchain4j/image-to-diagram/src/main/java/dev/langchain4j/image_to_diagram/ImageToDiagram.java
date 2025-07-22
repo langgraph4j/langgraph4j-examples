@@ -107,7 +107,7 @@ public interface ImageToDiagram {
         public boolean lastTwoDiagramsAreEqual() {
             if( diagramCode().size() < 2 ) return false;
 
-            String last = last( diagramCode() )
+            String last = lastOf( diagramCode() )
                     .map(String::trim)
                     .orElseThrow( () -> new IllegalStateException( "last() is null!" ) );
             String prev = lastMinus( diagramCode(), 1)

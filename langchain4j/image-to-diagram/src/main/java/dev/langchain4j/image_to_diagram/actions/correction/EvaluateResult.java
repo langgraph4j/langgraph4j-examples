@@ -6,7 +6,7 @@ import org.bsc.langgraph4j.action.AsyncNodeAction;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static org.bsc.langgraph4j.utils.CollectionsUtils.last;
+import static org.bsc.langgraph4j.utils.CollectionsUtils.lastOf;
 
 /**
  * Class declaration for EvaluateResult, which implements the AsyncNodeAction interface for ImageToDiagram.State.
@@ -27,7 +27,7 @@ public class EvaluateResult implements AsyncNodeAction<ImageToDiagram.State> {
      */
     @Override
     public CompletableFuture<Map<String, Object>> apply(ImageToDiagram.State state) {
-        String diagramCode = last( state.diagramCode() )
+        String diagramCode = lastOf( state.diagramCode() )
                 .orElseThrow(() -> new IllegalArgumentException("no diagram code provided!"));
 
         return PlantUMLAction.validate( diagramCode )

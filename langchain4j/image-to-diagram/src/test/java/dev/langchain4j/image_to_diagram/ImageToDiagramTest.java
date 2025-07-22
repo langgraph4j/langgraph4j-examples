@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.logging.LogManager;
 
 import static java.lang.String.format;
-import static org.bsc.langgraph4j.utils.CollectionsUtils.last;
+import static org.bsc.langgraph4j.utils.CollectionsUtils.lastOf;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -146,7 +146,7 @@ public class ImageToDiagramTest {
 
         var diagramCode = result.stream().reduce( (out1, out2) -> out2 )
                 .map( NodeOutput::state )
-                .flatMap( s -> last( s.diagramCode() ) )
+                .flatMap( s -> lastOf( s.diagramCode() ) )
                 .orElse("NO DIAGRAM CODE") ;
 
         assertNotNull(diagramCode);
@@ -174,7 +174,7 @@ public class ImageToDiagramTest {
                 })
                 .join();
 
-        java.util.Optional<String> code = last( result.diagramCode() );
+        java.util.Optional<String> code = lastOf( result.diagramCode() );
         assertTrue( code.isPresent() );
         assertEquals( expectedCode, code.get().trim() );
 

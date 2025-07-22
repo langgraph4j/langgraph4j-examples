@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static dev.langchain4j.image_to_diagram.ImageToDiagram.loadPromptTemplate;
-import static org.bsc.langgraph4j.utils.CollectionsUtils.last;
+import static org.bsc.langgraph4j.utils.CollectionsUtils.lastOf;
 
 /**
  * The ReviewResult class implements the AsyncNodeAction interface for processing ImageToDiagram.State objects.
@@ -49,7 +49,7 @@ public class ReviewResult implements AsyncNodeAction<ImageToDiagram.State> {
             /*
               Retrieves the diagram code from the state or throws an IllegalArgumentException if not available.
              */
-            String diagramCode = last(state.diagramCode())
+            String diagramCode = lastOf(state.diagramCode())
                     .orElseThrow(() -> new IllegalArgumentException("no diagram code provided!"));
 
             /*
