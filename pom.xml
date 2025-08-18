@@ -66,6 +66,7 @@
 
   <modules>
     <module><![CDATA[reference/agent-q&a]]></module>
+    <module>reference/subgraph-interruption</module>
 
 
     <module>langchain4j/agents-handoff</module>
