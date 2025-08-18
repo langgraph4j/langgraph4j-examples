@@ -7,6 +7,8 @@
 
 * [Agent Q&A](reference/agent-q&a)
    > Human-in-the-Loop use case , using interruption and resume through Checkpoints.
+* [Subgraph Interruption](reference/subgraph-interruption)
+  > An example on how to interrupt a Compiled SubGraph using exception
 
 ### Integrated with [Langchain4j]
 
