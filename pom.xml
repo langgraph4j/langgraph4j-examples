@@ -81,6 +81,7 @@
     <module>spring-ai/agents-handoff</module>
     <module>spring-ai/memory-agent</module>
     <module>spring-ai/mcp-client-agent</module>
+    <module>spring-ai/streaming-sample</module>
   </modules>
 
 </project>
