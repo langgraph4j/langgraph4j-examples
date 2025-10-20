@@ -2,8 +2,13 @@ package dev.langchain4j.studio;
 
 import dev.langchain4j.DotEnvConfig;
 import dev.langchain4j.adaptiverag.AdaptiveRag;
+import jakarta.servlet.DispatcherType;
+import org.bsc.langgraph4j.CompileConfig;
 import org.bsc.langgraph4j.GraphRepresentation;
-import org.bsc.langgraph4j.studio.jetty.LangGraphStreamingServerJetty;
+import org.bsc.langgraph4j.studio.LangGraphStudioServer;
+import org.bsc.langgraph4j.studio.jetty.LangGraphStudioServer4Jetty;
+
+import java.util.EnumSet;
 
 public class AdaptiveRAGStudioServer {
 
@@ -29,15 +34,23 @@ public class AdaptiveRAGStudioServer {
                         .content()
         );
 
-        var server = LangGraphStreamingServerJetty.builder()
-                .port(8080)
-                //.objectMapper(objectMapper)
+        var adaptiveRAG = LangGraphStudioServer.Instance.builder()
                 .title("ADAPTIVE RAG EXECUTOR")
                 .addInputStringArg("question")
-                .stateGraph(app)
+                .graph(app)
+                .compileConfig(CompileConfig.builder()
+                        .releaseThread(true)
+                        .build())
                 .build();
 
-        server.start().join();
+
+        LangGraphStudioServer4Jetty.builder()
+                .port(8080)
+                .instance( "adaptive_rag", adaptiveRAG )
+                .build()
+                .start()
+                .join();
+
 
     }
 

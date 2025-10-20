@@ -47,10 +47,13 @@ public class EvaluateResult implements AsyncNodeAction<ImageToDiagram.State> {
 
         DiagramCorrectionWorkflow diagramCorrectionProcess = new DiagramCorrectionWorkflow();
 
-        ArrayList<NodeOutput<ImageToDiagram.State>> list = new ArrayList<NodeOutput<ImageToDiagram.State>>();
+        final ArrayList<NodeOutput<ImageToDiagram.State>> list = new ArrayList<NodeOutput<ImageToDiagram.State>>();
         try {
             return diagramCorrectionProcess.workflow().compile().stream(state.data())
-                    .collectAsync(list, (l,v) -> log.info(v.toString()))
+                    .forEachAsync( v -> {
+                        list.add(v);
+                        log.info( "adding element: {}", v);
+                    })
                     .thenApply(v -> {
                         if (list.isEmpty()) {
                             throw new RuntimeException("no results");

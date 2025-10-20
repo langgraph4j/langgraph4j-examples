@@ -162,9 +162,12 @@ public class ImageToDiagramTest {
 
         final var process = new DiagramCorrectionWorkflow();
 
-        ArrayList<NodeOutput<ImageToDiagram.State>> list = new ArrayList<NodeOutput<ImageToDiagram.State>>();
+        final ArrayList<NodeOutput<ImageToDiagram.State>> list = new ArrayList<NodeOutput<ImageToDiagram.State>>();
         var result = process.workflow().compile().stream( Map.of( "diagramCode", diagramCode ) )
-                .collectAsync( list, (l, v) -> log.trace(v.toString()) )
+                .forEachAsync( v -> {
+                    list.add(v);
+                    log.trace( "node output: {}", v);
+                })
                 .thenApply( v -> {
                     if( list.isEmpty() ) {
                         throw new RuntimeException("no results");

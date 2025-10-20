@@ -2,8 +2,10 @@ package dev.langchain4j.studio;
 
 import dev.langchain4j.DotEnvConfig;
 import dev.langchain4j.image_to_diagram.ImageToDiagramWorkflow;
+import org.bsc.langgraph4j.CompileConfig;
 import org.bsc.langgraph4j.GraphRepresentation;
-import org.bsc.langgraph4j.studio.jetty.LangGraphStreamingServerJetty;
+import org.bsc.langgraph4j.studio.LangGraphStudioServer;
+import org.bsc.langgraph4j.studio.jetty.LangGraphStudioServer4Jetty;
 
 public class ImageToDiagramStudioServer {
 
@@ -26,11 +28,18 @@ public class ImageToDiagramStudioServer {
                         .content()
         );
 
-        var server = LangGraphStreamingServerJetty.builder()
-                .port(8080)
-                .title("Image To Diagram")
+        var imageToDiagram = LangGraphStudioServer.Instance.builder()
+                .title("LangGraph4j Studio - Image To Diagram")
                 .addInputImageArg( "imageData" )
-                .stateGraph(workflow)
+                .graph(workflow)
+                .compileConfig(CompileConfig.builder()
+                        .releaseThread(true)
+                        .build())
+                .build();
+
+        var server = LangGraphStudioServer4Jetty.builder()
+                .port(8080)
+                .instance("image_to_diagram", imageToDiagram)
                 .build();
 
         server.start().join();
