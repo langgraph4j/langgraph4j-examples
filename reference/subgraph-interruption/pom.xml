@@ -7,6 +7,7 @@
         <groupId>org.bsc.langgraph4j</groupId>
         <artifactId>langgraph4j-examples</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
 
@@ -21,7 +22,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <langgraph4j.version>1.6-SNAPSHOT</langgraph4j.version>
+        <langgraph4j.version>1.7-SNAPSHOT</langgraph4j.version>
         <spring-ai.version>1.0.0</spring-ai.version>
         <spring-boot.version>3.3.4</spring-boot.version>
     </properties>
@@ -48,7 +49,7 @@
             <dependency>
                 <groupId>org.springframework.ai</groupId>
                 <artifactId>spring-ai-bom</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
