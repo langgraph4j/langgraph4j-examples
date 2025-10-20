@@ -17,8 +17,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring-boot.version>3.4.5</spring-boot.version>
-        <spring-ai.version>1.0.0</spring-ai.version>
-        <langgraph4j.version>1.6-SNAPSHOT</langgraph4j.version>
+        <spring-ai.version>1.0.3</spring-ai.version>
+        <langgraph4j.version>1.7-SNAPSHOT</langgraph4j.version>
     </properties>
 
     <dependencies>
