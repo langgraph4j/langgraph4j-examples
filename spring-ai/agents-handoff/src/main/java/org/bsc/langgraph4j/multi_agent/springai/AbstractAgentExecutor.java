@@ -14,7 +14,7 @@ import org.springframework.ai.tool.ToolCallback;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractAgentExecutor<B extends AbstractAgent.Builder<B>> extends AbstractAgent<AbstractAgentExecutor.Request,String,B> {
+public abstract class   AbstractAgentExecutor<B extends AbstractAgent.Builder<B>> extends AbstractAgent<AbstractAgentExecutor.Request,String,B> {
 
     public record Request( String input ) {};
 

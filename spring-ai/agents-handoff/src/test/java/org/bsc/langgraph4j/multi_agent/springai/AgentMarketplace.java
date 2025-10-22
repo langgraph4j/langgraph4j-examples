@@ -2,6 +2,7 @@ package org.bsc.langgraph4j.multi_agent.springai;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import org.bsc.langgraph4j.GraphStateException;
+import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 
@@ -14,7 +15,7 @@ public class AgentMarketplace extends AbstractAgentExecutor<AgentMarketplace.Bui
                 @JsonPropertyDescription("the product price currency") String currency) {}
 
         @Tool( description="search for a specific product in the marketplace")
-        Product searchByProduct(@ToolParam( description="the product name to search") String product ) {
+        Product searchByProduct(@ToolParam( description="the product name to search") String product, ToolContext toolContext) {
             return new Product( "X", 1000, "EUR" );
         }
 

@@ -2,6 +2,7 @@ package org.bsc.langgraph4j.multi_agent.springai;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import org.bsc.langgraph4j.GraphStateException;
+import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 
@@ -19,7 +20,8 @@ public class AgentPayment extends AbstractAgentExecutor<AgentPayment.Builder> {
                 @ToolParam( description="the product name to buy") String product,
                 @ToolParam( description="the product price") double price,
                 @ToolParam( description="the product price currency") String currency,
-                @ToolParam( description="International Bank Account Number (IBAN)") String iban ) {
+                @ToolParam( description="International Bank Account Number (IBAN)") String iban,
+                ToolContext toolContext ) {
             return new Transaction( product,"123456789A" );
 
         }
