@@ -1,10 +1,11 @@
 package org.bsc.langgraph4j.multi_agent.springai;
 
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import org.bsc.langgraph4j.CompiledGraph;
 import org.bsc.langgraph4j.GraphStateException;
 import org.bsc.langgraph4j.serializer.StateSerializer;
+import org.bsc.langgraph4j.spring.ai.agent.ReactAgent;
 import org.bsc.langgraph4j.spring.ai.agentexecutor.AgentExecutor;
+import org.bsc.langgraph4j.spring.ai.serializer.jackson.SpringAIJacksonStateSerializer;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
@@ -14,13 +15,20 @@ import org.springframework.ai.tool.ToolCallback;
 import java.util.List;
 import java.util.Map;
 
-public abstract class   AbstractAgentExecutor<B extends AbstractAgent.Builder<B>> extends AbstractAgent<AbstractAgentExecutor.Request,String,B> {
+import static java.util.Objects.requireNonNull;
+
+public abstract class AbstractAgentExecutor<B extends AbstractAgent.Builder<B>> extends AbstractAgent<AbstractAgentExecutor.Request,String,B> {
 
     public record Request( String input ) {};
 
     public static abstract class Builder<B extends AbstractAgent.Builder<B>> extends AbstractAgent.Builder<B> {
 
-        final AgentExecutor.Builder agentExecutorBuilder = new AgentExecutor.Builder();
+        final ReactAgent.Builder<AgentExecutor.State> agentExecutorBuilder = new ReactAgent.Builder<>();
+
+        protected Builder() {
+            // default state serializer
+            agentExecutorBuilder.stateSerializer( new SpringAIJacksonStateSerializer<>( AgentExecutor.State::new ) );
+        }
 
         public B chatModel(ChatModel chatModel) {
             agentExecutorBuilder.chatModel(chatModel);
@@ -43,7 +51,7 @@ public abstract class   AbstractAgentExecutor<B extends AbstractAgent.Builder<B>
         }
 
         public B stateSerializer(StateSerializer<AgentExecutor.State> stateSerializer) {
-            this.agentExecutorBuilder.stateSerializer(stateSerializer);
+            this.agentExecutorBuilder.stateSerializer( requireNonNull(stateSerializer, "stateSerializer cannot be null!"));
             return result();
         }
 
@@ -60,7 +68,9 @@ public abstract class   AbstractAgentExecutor<B extends AbstractAgent.Builder<B>
     protected AbstractAgentExecutor(Builder<B> builder) throws GraphStateException {
         super(builder.inputType(Request.class));
 
-        agentExecutor = builder.agentExecutorBuilder.build().compile();
+        agentExecutor = builder.agentExecutorBuilder
+                .build()
+                .compile();
     }
 
     @Override
