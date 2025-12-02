@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>langgraph4j-springai-agent-handoff</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
 
     <name>langgraph4j::examples::agent-handoff::springai</name>
     <description>Sample project for multi agent handoff using springai</description>
@@ -46,9 +46,17 @@
             <artifactId>spring-ai-ollama</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-openai</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.javelit</groupId>
+            <artifactId>javelit</artifactId>
+            <version>0.74.0</version>
             <scope>test</scope>
         </dependency>
 

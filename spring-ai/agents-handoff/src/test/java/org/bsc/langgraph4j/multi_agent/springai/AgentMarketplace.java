@@ -2,7 +2,6 @@ package org.bsc.langgraph4j.multi_agent.springai;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import org.bsc.langgraph4j.GraphStateException;
-import org.bsc.langgraph4j.spring.ai.serializer.jackson.SpringAIJacksonStateSerializer;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
