@@ -3,7 +3,7 @@ Translate the json data representing the diagram data into a plantuml script con
 1. The participants' shape must be translated in their plantuml counterpart using the following conversion rules :
     - "rectangle" shape  must be translated into  plantuml's "rectangle"
     - "circle" shape  must be translated into  plantuml's "circle"
-    - "person" or  "stickman" shape  must be translated into  plantuml's  "actor"
+    - "person" or  "stick man" shape  must be translated into  plantuml's  "actor"
     - "oval" or "ellipse"  shape  must be translated into  plantuml's  "usecase"
     - "cylinder" shape  must be translated into  plantuml's  "database"
     - "diamond" shape  must be translated into  plantuml's "hexagon"
