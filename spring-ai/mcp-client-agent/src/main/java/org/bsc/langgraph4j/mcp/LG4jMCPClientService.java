@@ -8,6 +8,7 @@ import org.bsc.langgraph4j.spring.ai.agentexecutor.AgentExecutorEx;
 import org.bsc.langgraph4j.state.AgentState;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.mcp.AsyncMcpToolCallbackProvider;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +77,9 @@ public class LG4jMCPClientService {
 
         return AgentExecutorEx.builder()
                 .chatModel(chatModel)
-                .tools(new SyncMcpToolCallbackProvider(mcpSyncClient)) // add tools directly from MCP client
+                .tools(SyncMcpToolCallbackProvider.builder()
+                        .mcpClients(mcpSyncClient)
+                        .build()) // add tools directly from MCP client
                 .defaultSystem( getSystemMessageWithDBSchema() )
                 .build();
 
