@@ -1,12 +1,11 @@
 package dev.langchain4j.image_to_diagram.actions;
 
 import dev.langchain4j.data.message.*;
-import dev.langchain4j.image_to_diagram.state.Diagram;
-import dev.langchain4j.image_to_diagram.DiagramOutputParser;
 import dev.langchain4j.image_to_diagram.ImageToDiagram;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import org.bsc.langgraph4j.action.NodeAction;
+import org.bsc.langgraph4j.state.AgentState;
 
 import java.util.Map;
 import java.util.Objects;
@@ -46,12 +45,8 @@ public class DescribeDiagramImage implements NodeAction<ImageToDiagram.State> {
                 .apply( Map.of() );
 
         // Retrieve the image data from the state, throw an exception if no data is available
-        var imageUrlOrData = state.imageData().orElseThrow( () -> new RuntimeException("No image data provided")) ;
+        var imageContent = state.imageData().orElseThrow( () -> new RuntimeException("No image data provided")) ;
 
-        // Determine the type of image content based on whether it's a URL or binary data
-        var imageContent = (imageUrlOrData.url()!=null) ?
-                ImageContent.from(imageUrlOrData.url(), ImageContent.DetailLevel.AUTO) :
-                ImageContent.from(imageUrlOrData.data(), "image/png", ImageContent.DetailLevel.AUTO);
         // Create text content based on the system prompt
         var textContent = new TextContent(systemPrompt.text());
         // Combine the image and text content into a user message
@@ -63,11 +58,9 @@ public class DescribeDiagramImage implements NodeAction<ImageToDiagram.State> {
         var response = visionModel.chat(request );
 
         // Parse the response to extract diagram elements
-        DiagramOutputParser outputParser = new DiagramOutputParser();
-
-        Diagram.Element result = outputParser.parse( response.aiMessage().text() );
+        var diagramDescription = response.aiMessage().text();
 
         // Return a map containing the result diagram and image data
-        return Map.of( "diagram",result, "imageData", new Object() );
+        return Map.of( "diagramDescription", diagramDescription, "imageData", AgentState.MARK_FOR_REMOVAL );
     }
 }

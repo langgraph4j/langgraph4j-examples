@@ -1,6 +1,6 @@
-package dev.langchain4j.image_to_diagram.state;
+package dev.langchain4j.image_to_diagram;
 
-import jdk.jshell.Diag;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -38,9 +38,7 @@ export const diagramSchema = z.object({
 /**
  * Represents a diagram which contains various elements such as participants, relations, and containers.
  */
-public class Diagram {
-
-    private Diagram() {}
+public interface Diagram {
 
     /**
      * Represents a participant in an event.
@@ -49,7 +47,10 @@ public class Diagram {
      * @param shape     the shape associated with the participant
      * @param description a brief description of the participant
      */
-    public record Participant (String name, String shape, String description) {
+    record Participant (
+            @JsonProperty("name") String name,
+            @JsonProperty("shape") String shape,
+            @JsonProperty("description") String description) {
     }
 
     /**
@@ -59,7 +60,10 @@ public class Diagram {
      * @param target     the identifier of the target entity
      * @param description  an optional description of the relation
      */
-    public record Relation (String source, String target, String description) {
+    record Relation (
+            @JsonProperty("source") String source,
+            @JsonProperty("target") String target,
+            @JsonProperty("description") String description) {
     }
 
     /**
@@ -69,7 +73,10 @@ public class Diagram {
      * @param children     a list of child containers or items
      * @param description  a brief description of the container
      */
-    public record Container(String name, List<String> children, String description) {
+    record Container(
+            @JsonProperty("name") String name,
+            @JsonProperty("children") List<String> children,
+            @JsonProperty("description") String description) {
     }
 
     /**
@@ -82,13 +89,13 @@ public class Diagram {
      * @param containers    a list of containers associated with the element
      * @param description a list of descriptions for the element
      */
-    public record Element(
-        String type,
-        String title,
-        List<Participant> participants,
-        List<Relation> relations,
-        List<Container> containers,
-        List<String> description
+    record Element(
+            @JsonProperty("type") String type,
+            @JsonProperty("title") String title,
+            @JsonProperty("participants") List<Participant> participants,
+            @JsonProperty("relations") List<Relation> relations,
+            @JsonProperty("containers") List<Container> containers,
+            @JsonProperty("description") List<String> description
     ) {}
 
 }

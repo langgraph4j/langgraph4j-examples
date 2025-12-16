@@ -1,9 +1,8 @@
 package dev.langchain4j.image_to_diagram;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import dev.langchain4j.DotEnvConfig;
 import dev.langchain4j.data.message.*;
-import dev.langchain4j.image_to_diagram.state.Diagram;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.input.PromptTemplate;
 
@@ -30,7 +29,7 @@ public class ImageToDiagramTest {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ImageToDiagramTest.class);
 
-    public static final String VISION_MODEL_NAME = "gpt-4o";
+    public static final String VISION_MODEL_NAME = "gpt-5-mini";
 
     private String readTextResource(String resourceName ) throws Exception {
         final ClassLoader classLoader = getClass().getClassLoader();
@@ -62,8 +61,9 @@ public class ImageToDiagramTest {
         String json = readTextResource("diagram_data.json");
         assertNotNull(json);
 
-        var gson = new Gson();
-        var diagram = gson.fromJson(json, Diagram.Element.class);
+        var jsonMapper = JsonMapper.builder().build();
+
+        var diagram = jsonMapper.readValue(json, Diagram.Element.class);
 
         assertNotNull(diagram);
         assertEquals( "process", diagram.type()  );
@@ -78,8 +78,7 @@ public class ImageToDiagramTest {
     public void parseDescription() throws Exception {
         String result = readTextResource("describe_result.txt");
 
-        DiagramOutputParser outputParser = new DiagramOutputParser();
-        var diagram = outputParser.parse( result );
+        var diagram = DiagramOutputParser.parse( result );
         assertNotNull(diagram);
         assertEquals( "process", diagram.type()  );
         assertEquals( "User Request Routing", diagram.title()  );
@@ -96,15 +95,12 @@ public class ImageToDiagramTest {
 
         dev.langchain4j.model.input.Prompt systemPrompt = PromptTemplate.from(template).apply( Map.of());
 
-        String imageData = ImageLoader.loadImageAsBase64( "supervisor-diagram.png" );
+        ImageContent imageData = ImageLoader.loadImageContentFromResource( "/supervisor-diagram.png", "image/png" );
 
         assertNotNull(imageData);
 
-        var imageUrlOrData = ImageToDiagramWorkflow.ImageUrlOrData.of( new URI("https://blog.langchain.dev/content/images/2024/01/supervisor-diagram.png")  );
+        ImageContent imageContent = ImageLoader.loadImageContentFromURI( new URI("https://blog.langchain.dev/content/images/2024/01/supervisor-diagram.png"), "image/png"  );
 
-        ImageContent imageContent = (imageUrlOrData.url()!=null) ?
-                ImageContent.from(imageUrlOrData.url(), ImageContent.DetailLevel.AUTO) :
-                ImageContent.from(imageUrlOrData.data(), "image/png", ImageContent.DetailLevel.AUTO );
         TextContent textContent = new TextContent(systemPrompt.text());
         UserMessage message = UserMessage.from(textContent, imageContent);
 
@@ -115,13 +111,11 @@ public class ImageToDiagramTest {
                 .build();
         var response = imageToDiagram.getVisionModel().chat(request );
 
-        var outputParser = new DiagramOutputParser();
-
         String text = response.aiMessage().text();
 
         assertNotNull( text );
 
-       var diagram = outputParser.parse( text );
+       var diagram = DiagramOutputParser.parse( text );
 
        assertNotNull(diagram);
        assertEquals( "process", diagram.type()  );
@@ -138,11 +132,11 @@ public class ImageToDiagramTest {
 
         var agentExecutor = new ImageToDiagramWorkflow();
 
-        var imageData = ImageLoader.loadImageAsBase64( "LangChainAgents.png" );
+        var imageContent = ImageLoader.loadImageContentFromResource( "/LangChainAgents.png", "image/png" );
 
-        assertNotNull(imageData);
+        assertNotNull(imageContent);
 
-        var result = agentExecutor.executeWithCorrection( ImageToDiagramWorkflow.ImageUrlOrData.of(imageData) );
+        var result = agentExecutor.executeWithCorrection( imageContent );
 
         var diagramCode = result.stream().reduce( (out1, out2) -> out2 )
                 .map( NodeOutput::state )

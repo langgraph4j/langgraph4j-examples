@@ -1,7 +1,7 @@
 package dev.langchain4j.image_to_diagram.actions;
 
 import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.image_to_diagram.state.Diagram;
+import dev.langchain4j.image_to_diagram.DiagramOutputParser;
 import dev.langchain4j.image_to_diagram.ImageToDiagram;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -42,8 +42,10 @@ public class TranslateSequenceDiagramToPlantUML implements NodeAction<ImageToDia
      */
     @Override
     public Map<String, Object> apply(ImageToDiagram.State state) throws Exception {
-        Diagram.Element diagram = state.diagram()
-                .orElseThrow(() -> new IllegalArgumentException("no diagram provided!"));
+        var diagramDescription = state.diagramDescription()
+                .orElseThrow(() -> new IllegalArgumentException("no diagram description provided!"));
+
+        var diagram = DiagramOutputParser.parse( diagramDescription );
 
         var systemPrompt = ImageToDiagram.loadPromptTemplate( "convert_sequence_diagram_to_plantuml.txt" )
                 .apply( Map.of( "diagram_description", diagram));
