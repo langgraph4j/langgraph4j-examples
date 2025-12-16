@@ -1,9 +1,11 @@
 package dev.langchain4j.studio;
 
 import dev.langchain4j.DotEnvConfig;
+import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.image_to_diagram.ImageToDiagramWorkflow;
 import org.bsc.langgraph4j.CompileConfig;
 import org.bsc.langgraph4j.GraphRepresentation;
+import org.bsc.langgraph4j.checkpoint.MemorySaver;
 import org.bsc.langgraph4j.studio.LangGraphStudioServer;
 import org.bsc.langgraph4j.studio.jetty.LangGraphStudioServer4Jetty;
 
@@ -14,14 +16,10 @@ public class ImageToDiagramStudioServer {
 
         DotEnvConfig.load();
 
-        // var openApiKey = DotEnvConfig.valueOf("OPENAI_API_KEY")
-        //        .orElseThrow( () -> new IllegalArgumentException("no OPENAI API KEY provided!"));
-
-        // var imageData = ImageLoader.loadImageAsBase64( "LangChainAgents.png" );
-
         var agentExecutor = new ImageToDiagramWorkflow();
 
-        var workflow = agentExecutor.workflowWithCorrection();
+        //var workflow = agentExecutor.workflowWithCorrection();
+        var workflow = agentExecutor.workflow();
 
         System.out.println (
                 workflow.getGraph(GraphRepresentation.Type.MERMAID, "Image To Diagram", false)
@@ -30,9 +28,11 @@ public class ImageToDiagramStudioServer {
 
         var imageToDiagram = LangGraphStudioServer.Instance.builder()
                 .title("LangGraph4j Studio - Image To Diagram")
-                .addInputImageArg( "imageData" )
+                .addInputImageArg( "imageData", true, ( base64value ) ->
+                        ImageContent.from( (String)base64value, "image/png", ImageContent.DetailLevel.AUTO) )
                 .graph(workflow)
                 .compileConfig(CompileConfig.builder()
+                        .checkpointSaver( new MemorySaver() )
                         .releaseThread(true)
                         .build())
                 .build();

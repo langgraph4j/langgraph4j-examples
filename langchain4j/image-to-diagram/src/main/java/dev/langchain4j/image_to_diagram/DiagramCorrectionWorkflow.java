@@ -3,7 +3,6 @@ package dev.langchain4j.image_to_diagram;
 import dev.langchain4j.image_to_diagram.actions.correction.EvaluateResult;
 import dev.langchain4j.image_to_diagram.actions.correction.ReviewResult;
 import dev.langchain4j.image_to_diagram.actions.correction.RouteEvaluationResult;
-import dev.langchain4j.image_to_diagram.serializer.gson.JSONStateSerializer;
 
 import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.action.AsyncEdgeAction;
@@ -11,9 +10,6 @@ import org.bsc.langgraph4j.action.AsyncNodeAction;
 import org.bsc.langgraph4j.serializer.StateSerializer;
 import org.bsc.langgraph4j.utils.EdgeMappings;
 
-import java.util.Map;
-
-import static org.bsc.langgraph4j.StateGraph.END;
 import static org.bsc.langgraph4j.StateGraph.START;
 import static org.bsc.langgraph4j.action.AsyncEdgeAction.edge_async;
 
@@ -35,7 +31,7 @@ public class DiagramCorrectionWorkflow implements ImageToDiagram {
      * @throws Exception If an error occurs during the workflow execution
      */
     public StateGraph<State> workflow() throws Exception {
-        return workflow(new JSONStateSerializer());
+        return workflow(stateSerializer());
     }
 
     /**

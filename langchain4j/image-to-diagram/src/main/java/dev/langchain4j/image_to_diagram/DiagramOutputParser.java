@@ -1,14 +1,16 @@
 package dev.langchain4j.image_to_diagram;
 
-import com.google.gson.Gson;
-import dev.langchain4j.image_to_diagram.state.Diagram;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import java.util.regex.Pattern;
 
 /**
  * This class provides functionality to parse a JSON formatted string and convert it into a `Diagram.Element` object.
  */
-public class DiagramOutputParser {
+public interface  DiagramOutputParser {
+
     /**
      * Parses a JSON string and converts it into a Diagram.Element object.
      *
@@ -16,7 +18,7 @@ public class DiagramOutputParser {
      * @return A Diagram.Element object representing the parsed JSON data.
      * @throws IllegalArgumentException If no valid JSON is found in the input string.
      */
-    public Diagram.Element parse(String s) {
+    static Diagram.Element parse(String s) {
         // String pattern = "```json\n(.*?)\n```";
         String pattern = "```json\n(.*?)\n```";
 
@@ -28,10 +30,15 @@ public class DiagramOutputParser {
 
         // Check if a match is found
         if (!matcher.find()) {
-            throw new IllegalArgumentException("no diagram provided! in text\n" + s);
+            throw new IllegalArgumentException("no diagram provided in text\n" + s);
         }
 
-        Gson gson = new Gson();
-        return gson.fromJson(matcher.group(1), Diagram.Element.class);
+        var jsonMapper = JsonMapper.builder().build();
+
+        try {
+            return  jsonMapper.readValue(matcher.group(1), new TypeReference<>() {});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

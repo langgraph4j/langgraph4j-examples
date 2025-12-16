@@ -1,9 +1,12 @@
 package dev.langchain4j.image_to_diagram;
 
-import dev.langchain4j.image_to_diagram.state.Diagram;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.model.input.PromptTemplate;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import net.sourceforge.plantuml.ErrorUmlType;
+import org.bsc.langgraph4j.langchain4j.serializer.jackson.LC4jJacksonStateSerializer;
+import org.bsc.langgraph4j.serializer.StateSerializer;
 import org.bsc.langgraph4j.state.AgentState;
 import org.bsc.langgraph4j.state.Channel;
 import org.bsc.langgraph4j.state.Channels;
@@ -40,21 +43,18 @@ public interface ImageToDiagram {
         }
 
         /**
-         * Retrieves the image data as an {@link ImageToDiagramWorkflow.ImageUrlOrData}.
+         * Retrieves the image data as an {@link ImageContent}.
          *
          * @return An {@link Optional} containing the image data, or empty if not available.
          */
-        public Optional<ImageToDiagramWorkflow.ImageUrlOrData> imageData() {
+        public Optional<ImageContent> imageData() {
             return value("imageData");
         }
-        /**
-         * Retrieves the diagram element associated with this object.
-         *
-         * @return an {@link Optional} containing the diagram element if it exists, otherwise an empty optional.
-         */
-        public Optional<Diagram.Element> diagram() {
-            return value("diagram");
+
+        public Optional<String> diagramDescription() {
+            return this.value("diagramDescription");
         }
+
         /**
          * Returns a list of diagram code.
          * If the "diagramCode" value is not present, returns an empty list.
@@ -169,6 +169,17 @@ public interface ImageToDiagram {
                 .maxTokens(2000)
                 .build();
 
+    }
+
+    /**
+     * default state serializer
+     *
+     * @return LC4jJacksonStateSerializer
+     */
+    default StateSerializer<State> stateSerializer() {
+        var serializer = new LC4jJacksonStateSerializer<>(ImageToDiagram.State::new);
+        serializer.objectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        return serializer;
     }
 
     /**
