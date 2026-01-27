@@ -22,7 +22,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <langgraph4j.version>1.7-SNAPSHOT</langgraph4j.version>
+        <langgraph4j.version>1.8-SNAPSHOT</langgraph4j.version>
         <spring-ai.version>1.0.0</spring-ai.version>
         <spring-boot.version>3.3.4</spring-boot.version>
     </properties>
