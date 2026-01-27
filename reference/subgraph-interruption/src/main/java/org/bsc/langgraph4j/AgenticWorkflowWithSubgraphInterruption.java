@@ -109,7 +109,7 @@ public interface AgenticWorkflowWithSubgraphInterruption {
             });
         }
 
-        private CompiledGraph<MyState> subGraph( BaseCheckpointSaver saver ) throws Exception {
+        private CompiledGraph<MyState> subGraph( BaseCheckpointSaver saver ) throws GraphStateException {
 
             var compileConfig = CompileConfig.builder()
                     .checkpointSaver(saver)
@@ -131,14 +131,21 @@ public interface AgenticWorkflowWithSubgraphInterruption {
                     .compile(compileConfig);
         }
 
-        public CompiledGraph<MyState>  build() throws Exception {
+        public CompiledGraph<MyState>  build() throws GraphStateException {
             requireNonNull( saver, "checkpointSaver is required!");
-
-            var stateSerializer = new ObjectStreamStateSerializer<>( MyState::new );
 
             var compileConfig = CompileConfig.builder()
                     .checkpointSaver(saver)
                     .build();
+
+            return buildAsStateGraph().compile( compileConfig );
+
+       }
+
+       public StateGraph<MyState> buildAsStateGraph() throws GraphStateException {
+            requireNonNull( saver, "checkpointSaver is required!");
+
+            var stateSerializer = new ObjectStreamStateSerializer<>( MyState::new );
 
             var subGraph = subGraph(saver); // create subgraph
 
@@ -154,9 +161,11 @@ public interface AgenticWorkflowWithSubgraphInterruption {
                     .addEdge("NODE3", "NODE4")
                     .addEdge("NODE4", "NODE5")
                     .addEdge("NODE5", END)
-                    .compile( compileConfig );
+                    ;
 
-       }
+        }
     }
+
+
 
 }
