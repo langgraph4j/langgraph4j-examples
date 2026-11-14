@@ -32,12 +32,13 @@ public class ChromaTest {
         String openApiKey = DotEnvConfig.valueOf("OPENAI_API_KEY")
                 .orElseThrow( () -> new IllegalArgumentException("no APIKEY provided!"));
 
-        ChromaEmbeddingStore chroma = new ChromaEmbeddingStore(
-                "http://localhost:8000",
-                "rag-chroma",
-                Duration.ofMinutes(2),
-                true,
-                true);
+        ChromaEmbeddingStore chroma = ChromaEmbeddingStore.builder()
+                .baseUrl("http://localhost:8000")
+                .collectionName("rag-chroma")
+                .timeout(Duration.ofMinutes(2))
+                .logRequests(true)
+                .logResponses(true)
+                .build();
 
         OpenAiEmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
                 .apiKey(openApiKey)

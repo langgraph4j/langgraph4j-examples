@@ -58,12 +58,13 @@ public class AdaptiveRagTest {
 
         RetrievalGrader grader = new RetrievalGrader(openApiKey);
 
-        ChromaEmbeddingStore chroma = new ChromaEmbeddingStore(
-                "http://localhost:8000",
-                "rag-chroma",
-                Duration.ofMinutes(2),
-                true,
-                true);
+        ChromaEmbeddingStore chroma = ChromaEmbeddingStore.builder()
+                .baseUrl("http://localhost:8000")
+                .collectionName("rag-chroma")
+                .timeout(Duration.ofMinutes(2))
+                .logRequests(true)
+                .logResponses(true)
+                .build();
         OpenAiEmbeddingModel embeddingModel = OpenAiEmbeddingModel.builder()
                 .apiKey(openApiKey)
                 .build();

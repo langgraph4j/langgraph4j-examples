@@ -23,12 +23,7 @@ public final class ChromaStore {
         return new ChromaStore(openApiKey);
     }
 
-    private final ChromaEmbeddingStore chroma = new ChromaEmbeddingStore(
-            "http://localhost:8000",
-            "rag-chroma",
-            Duration.ofMinutes(2),
-            true,
-            true );
+    private final ChromaEmbeddingStore chroma;
     private final OpenAiEmbeddingModel embeddingModel;
 
     /**
@@ -37,6 +32,13 @@ public final class ChromaStore {
      * @param openApiKey The API key for accessing OpenAI services.
      */
     private ChromaStore( String openApiKey ) {
+
+        this.chroma = ChromaEmbeddingStore.builder()
+                .baseUrl("http://localhost:8000")
+                .collectionName("rag-chroma")
+                .timeout(Duration.ofMinutes(2))
+                .build();
+
         this.embeddingModel = OpenAiEmbeddingModel.builder()
                 .apiKey(openApiKey)
                 .build();

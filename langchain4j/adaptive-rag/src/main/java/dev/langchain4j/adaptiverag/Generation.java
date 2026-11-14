@@ -30,7 +30,7 @@ public record Generation(String openApiKey)  implements BiFunction<String, List<
          * @param context A list of string values representing contextual information useful in answering the question.
          * @return A string containing the answer to the question based on the available context.
          */
-        @UserMessage("You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\n" +
+        @UserMessage("You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise." +
                 "Question: {{question}} \n" +
                 "Context: {{context}} \n" +
                 "Answer:")
