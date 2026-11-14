@@ -9,7 +9,8 @@
    > Human-in-the-Loop use case , using interruption and resume through Checkpoints.
 * [Subgraph Interruption](reference/subgraph-interruption)
   > An example on how to interrupt a Compiled SubGraph using exception
-
+#### External projects
+* [HITL and Approval/Rejection by REST API Call](https://github.com/jv11-hub/langgraph4j-with-rest-api-call)
 ### Integrated with [Langchain4j]
 
 * [Agent handoff](langchain4j/agents-handoff)
