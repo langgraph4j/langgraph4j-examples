@@ -5,6 +5,8 @@ import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import org.bsc.langgraph4j.GraphInput;
+import org.bsc.langgraph4j.RunnableConfig;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -71,7 +73,9 @@ public class MultiAgentHandoffITest {
 
         var input = "search for product 'X' and purchase it";
 
-        var result = handoffExecutor.invoke( Map.of( "messages", UserMessage.from(input)));
+        var result = handoffExecutor.invokeSync(
+                GraphInput.args(Map.of( "messages", UserMessage.from(input))),
+                RunnableConfig.empty() );
 
         System.out.println( result );
 

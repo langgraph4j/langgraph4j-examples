@@ -7,7 +7,9 @@ import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.service.tool.ToolExecutor;
 import org.bsc.langgraph4j.CompiledGraph;
+import org.bsc.langgraph4j.GraphInput;
 import org.bsc.langgraph4j.GraphStateException;
+import org.bsc.langgraph4j.RunnableConfig;
 import org.bsc.langgraph4j.agentexecutor.AgentExecutor;
 
 import java.util.Map;
@@ -50,11 +52,14 @@ public abstract class AbstractAgentExecutor<B extends AbstractAgentExecutor.Buil
     @Override
     public String execute(ToolExecutionRequest toolExecutionRequest, Object o) {
 
-        var userMessage = UserMessage.from( toolExecutionRequest.arguments() );
+        final var userMessage = UserMessage.from( toolExecutionRequest.arguments() );
 
-        var result = agentExecutor.invoke( Map.of( "messages", userMessage ) );
+        final var result = agentExecutor.invokeSync(
+                GraphInput.args(Map.of( "messages", userMessage )),
+                RunnableConfig.empty() );
 
-        return result.flatMap(AgentExecutor.State::finalResponse).orElseThrow();
+        return result.<AgentExecutor.State>asState().finalResponse()
+                .orElseThrow( () -> new Error("No final response found in the state!"));
     }
 
 }
