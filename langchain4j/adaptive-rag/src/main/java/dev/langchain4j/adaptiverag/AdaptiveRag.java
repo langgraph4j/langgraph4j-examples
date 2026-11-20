@@ -1,13 +1,14 @@
 package dev.langchain4j.adaptiverag;
 
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
-
-import org.bsc.langgraph4j.CompiledGraph;
-import org.bsc.langgraph4j.StateGraph;
+import org.bsc.langgraph4j.*;
 import org.bsc.langgraph4j.state.AgentState;
 
 import java.io.FileInputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -55,7 +56,7 @@ public class AdaptiveRag {
 
     }
 
-    private final String openApiKey;
+    private final ChatModel chatModel;
     private final String tavilyApiKey;
     private ChromaStore chroma;
 
@@ -69,20 +70,29 @@ public class AdaptiveRag {
     /**
      * Constructor for the AdaptiveRag class.
      *
-     * @param openApiKey  The API key for OpenAI, used for accessing its services.
      * @param tavilyApiKey  The API key for Tavily, used for web search functionality.
      *
      * This constructor initializes the AdaptiveRag instance by validating the provided API keys.
      * Both keys are required for the functionality of this class. If either key is null,
      * an exception is thrown. This ensures that the AdaptiveRag instance is always properly configured.
      */
-    public AdaptiveRag(String openApiKey, String tavilyApiKey) {
-        this.openApiKey     = Objects.requireNonNull(openApiKey, "no OPENAI APIKEY provided!");
+    public AdaptiveRag( String tavilyApiKey) {
         this.tavilyApiKey   = Objects.requireNonNull(tavilyApiKey, "no TAVILY APIKEY provided!");
+        this.chatModel = OllamaChatModel.builder()
+                .baseUrl("http://localhost:11434")
+                .modelName( "qwen3.5" )
+                .timeout(Duration.ofMinutes(2))
+                .logRequests(true)
+                .logResponses(true)
+                .maxRetries(2)
+                .temperature(0.0)
+                .build();
         // The ChromaStore instance is lazily initialized when accessed via the getChroma() method.
     }
+
+
     private ChromaStore openChroma() {
-        return ChromaStore.of(openApiKey);
+        return new ChromaStore();
     }
 
     /**
@@ -116,7 +126,7 @@ public class AdaptiveRag {
         String question = state.question();
         List<String> documents = state.documents();
 
-        String generation = (new Generation(openApiKey)).apply(question, documents); // service
+        String generation = (new Generation(chatModel)).apply(question, documents); // service
 
         return Map.of("generation", generation);
     }
@@ -133,7 +143,7 @@ public class AdaptiveRag {
 
         List<String> documents = state.documents();
 
-        final RetrievalGrader grader = new RetrievalGrader( openApiKey );
+        final RetrievalGrader grader = new RetrievalGrader( chatModel );
 
         List<String> filteredDocs =  documents.stream()
                 .filter( d -> {
@@ -162,7 +172,7 @@ public class AdaptiveRag {
 
         String question = state.question();
 
-        String betterQuestion = (new QuestionRewriter( openApiKey )).apply( question );
+        String betterQuestion = (new QuestionRewriter( chatModel )).apply( question );
 
         return Map.of( "question", betterQuestion );
     }
@@ -196,7 +206,7 @@ public class AdaptiveRag {
 
         String question = state.question();
 
-        QuestionRouter.Type source = (new QuestionRouter( openApiKey )).apply( question );
+        QuestionRouter.Type source = (new QuestionRouter( chatModel )).apply( question );
         if( source == QuestionRouter.Type.web_search ) {
             log.debug("---ROUTE QUESTION TO WEB SEARCH---");
         }
@@ -236,14 +246,14 @@ public class AdaptiveRag {
         String generation = state.generation()
                 .orElseThrow( () -> new IllegalStateException( "generation is not set!" ) );
 
-
-        HallucinationGrader.Score score = (new HallucinationGrader( openApiKey ))
+        HallucinationGrader.Score score = (new HallucinationGrader( chatModel ))
                                             .apply( new HallucinationGrader.Arguments(documents, generation));
 
         if(Objects.equals(score.binaryScore, "yes")) {
             log.debug( "---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---" );
             log.debug("---GRADE GENERATION vs QUESTION---");
-            AnswerGrader.Score score2 = (new AnswerGrader( openApiKey ))
+
+            AnswerGrader.Score score2 = (new AnswerGrader( chatModel ))
                                             .apply( new AnswerGrader.Arguments(question, generation) );
             if( Objects.equals( score2.binaryScore, "yes") ) {
                 log.debug( "---DECISION: GENERATION ADDRESSES QUESTION---" );
@@ -300,22 +310,23 @@ public class AdaptiveRag {
             LogManager.getLogManager().readConfiguration(configFile);
         };
 
-        AdaptiveRag adaptiveRagTest = new AdaptiveRag( System.getenv("OPENAI_API_KEY"), System.getenv("TAVILY_API_KEY"));
+        AdaptiveRag adaptiveRagTest = new AdaptiveRag( System.getenv("TAVILY_API_KEY"));
 
         CompiledGraph<State> graph = adaptiveRagTest.buildGraph().compile();
 
-        org.bsc.async.AsyncGenerator<org.bsc.langgraph4j.NodeOutput<State>> result = graph.stream( Map.of( "question", "What player at the Bears expected to draft first in the 2024 NFL draft?" ) );
-        // var result = graph.stream( Map.of( "question", "What kind the agent memory do iu know?" ) );
+       graph.stream(
+                GraphInput.args(Map.of( "question", "What player at the Bears expected to draft first in the 2024 NFL draft?" ) ),
+                RunnableConfig.empty())
+                .forEachAsync( r -> {
+                    System.out.printf( "Node: '%s':\n", r.node() );
+                })
+                .thenApply( GraphResult::from )
+                .thenAccept( result -> {
+                    System.out.println( result.<State>asState().generation().orElse("no generation") );
+                });
 
-        String generation = "";
-        for( org.bsc.langgraph4j.NodeOutput<State> r : result ) {
-            System.out.printf( "Node: '%s':\n", r.node() );
 
-            generation = r.state().generation().orElse( "")
-            ;
-        }
 
-        System.out.println( generation );
 
         // generate plantuml script
         // var plantUml = graph.getGraph( GraphRepresentation.Type.PLANTUML );

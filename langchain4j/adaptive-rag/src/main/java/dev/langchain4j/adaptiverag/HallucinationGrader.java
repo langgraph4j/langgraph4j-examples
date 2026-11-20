@@ -11,13 +11,18 @@ import java.time.Duration;
 import java.util.List;
 import java.util.function.Function;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Provides functionality to grade the groundedness of an LLM generation with respect to a set of facts. 
  * The class implements the {@link Function} interface, which accepts parameters of type {@link Arguments}
  * and returns a score indicating whether the generation is grounded or not.
  */
-public record HallucinationGrader( String openApiKey ) implements Function<HallucinationGrader.Arguments,HallucinationGrader.Score> {
+public record HallucinationGrader( ChatModel chatModel ) implements Function<HallucinationGrader.Arguments,HallucinationGrader.Score> {
 
+    public HallucinationGrader {
+        requireNonNull(chatModel, "chatModel must not be null");
+    }
     /**
      * Binary score for hallucination present in generation answer.
      */
@@ -62,18 +67,9 @@ public record HallucinationGrader( String openApiKey ) implements Function<Hallu
      * @return A Score object from the AI grader's invocation. */
     @Override
     public Score apply(Arguments args) {
-        ChatModel chatLanguageModel = OpenAiChatModel.builder()
-                .apiKey( openApiKey )
-                .modelName( "gpt-3.5-turbo-0125" )
-                .timeout(Duration.ofMinutes(2))
-                .logRequests(true)
-                .logResponses(true)
-                .maxRetries(2)
-                .temperature(0.0)
-                .maxTokens(2000)
-                .build();
 
-        Service grader = AiServices.create(Service.class, chatLanguageModel);
+
+        Service grader = AiServices.create(Service.class, chatModel);
 
         Prompt prompt = StructuredPromptProcessor.toPrompt(args);
 

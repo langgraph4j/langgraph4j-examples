@@ -5,6 +5,7 @@ import dev.langchain4j.adaptiverag.AdaptiveRag;
 import jakarta.servlet.DispatcherType;
 import org.bsc.langgraph4j.CompileConfig;
 import org.bsc.langgraph4j.GraphRepresentation;
+import org.bsc.langgraph4j.checkpoint.MemorySaver;
 import org.bsc.langgraph4j.studio.LangGraphStudioServer;
 import org.bsc.langgraph4j.studio.jetty.LangGraphStudioServer4Jetty;
 
@@ -16,12 +17,10 @@ public class AdaptiveRAGStudioServer {
 
         DotEnvConfig.load();
 
-        var openApiKey = DotEnvConfig.valueOf("OPENAI_API_KEY")
-                .orElseThrow( () -> new IllegalArgumentException("no OPENAI API KEY provided!"));
         var tavilyApiKey = DotEnvConfig.valueOf("TAVILY_API_KEY")
                 .orElseThrow( () -> new IllegalArgumentException("no TAVILY API KEY provided!"));
 
-        var adaptiveRagTest = new AdaptiveRag( openApiKey, tavilyApiKey);
+        var adaptiveRagTest = new AdaptiveRag( tavilyApiKey);
 
         var app = adaptiveRagTest.buildGraph();
 
@@ -39,7 +38,7 @@ public class AdaptiveRAGStudioServer {
                 .addInputStringArg("question")
                 .graph(app)
                 .compileConfig(CompileConfig.builder()
-                        .releaseThread(true)
+                        .checkpointSaver(new MemorySaver())
                         .build())
                 .build();
 

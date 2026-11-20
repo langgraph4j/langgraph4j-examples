@@ -9,12 +9,18 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.function.Function;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * This class implements a {@link Function} to rewrite questions for better vectorstore retrieval.
  * It uses an AI language model to rephrase input questions based on semantic intent and meaning.
  *
  */
-public record QuestionRewriter( String openApiKey ) implements Function<String, String> {
+public record QuestionRewriter( ChatModel chatModel ) implements Function<String, String> {
+
+    public QuestionRewriter {
+        requireNonNull(chatModel, "chatModel must not be null");
+    }
 
     /**
      * Interface representing a service for interfacing with a Language Model.
@@ -50,19 +56,7 @@ public record QuestionRewriter( String openApiKey ) implements Function<String, 
     @Override
     public String apply(String question) {
 
-        ChatModel chatLanguageModel = OpenAiChatModel.builder()
-                .apiKey( openApiKey )
-                .modelName( "gpt-3.5-turbo-0125" )
-                .timeout(Duration.ofMinutes(2))
-                .logRequests(true)
-                .logResponses(true)
-                .maxRetries(2)
-                .temperature(0.0)
-                .maxTokens(2000)
-                .build();
-
-
-        LLMService service = AiServices.create(LLMService.class, chatLanguageModel);
+        LLMService service = AiServices.create(LLMService.class, chatModel);
 
         PromptTemplate template = PromptTemplate.from("Here is the initial question: \n\n {{question}} \n Formulate an improved question.");
 

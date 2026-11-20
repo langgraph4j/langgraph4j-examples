@@ -10,11 +10,18 @@ import dev.langchain4j.service.SystemMessage;
 import java.time.Duration;
 import java.util.function.Function;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Class to grade answers based on whether they address a given question.
  * Implements the Function interface to take in Arguments and output a Score.
  */
-public record AnswerGrader(String openApiKey) implements Function<AnswerGrader.Arguments,AnswerGrader.Score> {
+public record AnswerGrader(ChatModel chatModel) implements Function<AnswerGrader.Arguments,AnswerGrader.Score> {
+
+    public AnswerGrader {
+
+        requireNonNull(chatModel, "chatModel must not be null");
+    }
     /**
      * Binary score to assess answer addresses question.
      */
@@ -59,19 +66,8 @@ public record AnswerGrader(String openApiKey) implements Function<AnswerGrader.A
      */
     @Override
     public Score apply(Arguments args) {
-        ChatModel chatLanguageModel = OpenAiChatModel.builder()
-                .apiKey( openApiKey )
-                .modelName( "gpt-3.5-turbo-0125" )
-                .timeout(Duration.ofMinutes(2))
-                .logRequests(true)
-                .logResponses(true)
-                .maxRetries(2)
-                .temperature(0.0)
-                .maxTokens(2000)
-                .build();
 
-
-        Service service = AiServices.create(Service.class, chatLanguageModel);
+        Service service = AiServices.create(Service.class, chatModel);
 
         Prompt prompt = StructuredPromptProcessor.toPrompt(args);
 

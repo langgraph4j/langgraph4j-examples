@@ -1,6 +1,9 @@
 package dev.langchain4j.adaptiverag;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.embedding.DimensionAwareEmbeddingModel;
+import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingSearchResult;
@@ -13,25 +16,14 @@ import java.time.Duration;
  * It abstracts the embedding model and the storage layer, offering a simple method to retrieve relevant data based on queries.
  */
 public final class ChromaStore {
-    /**
-     * Creates a new instance of {@link ChromaStore} using the provided OpenAI API key.
-     *
-     * @param openApiKey The API key to be used for authentication with OpenAI services.
-     * @return A new instance of {@link ChromaStore}.
-     */
-    public static ChromaStore of(String openApiKey) {
-        return new ChromaStore(openApiKey);
-    }
 
     private final ChromaEmbeddingStore chroma;
-    private final OpenAiEmbeddingModel embeddingModel;
+    private final DimensionAwareEmbeddingModel embeddingModel;
 
     /**
-     * This constructor initializes a new instance of the ChromaStore with the provided OpenAI API key.
-     *
-     * @param openApiKey The API key for accessing OpenAI services.
+     * This constructor initializes a new instance of the ChromaStore.
      */
-    private ChromaStore( String openApiKey ) {
+    public ChromaStore() {
 
         this.chroma = ChromaEmbeddingStore.builder()
                 .baseUrl("http://localhost:8000")
@@ -39,8 +31,8 @@ public final class ChromaStore {
                 .timeout(Duration.ofMinutes(2))
                 .build();
 
-        this.embeddingModel = OpenAiEmbeddingModel.builder()
-                .apiKey(openApiKey)
+        this.embeddingModel = OllamaEmbeddingModel.builder()
+                .modelName("qwen-3.5")
                 .build();
     }
 

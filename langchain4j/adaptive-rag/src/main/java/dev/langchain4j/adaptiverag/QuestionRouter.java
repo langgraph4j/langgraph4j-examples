@@ -1,16 +1,21 @@
 package dev.langchain4j.adaptiverag;
 import dev.langchain4j.model.chat.ChatModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.output.structured.Description;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.SystemMessage;
-import java.time.Duration;
+
 import java.util.function.Function;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * Router for user queries to the most relevant datasource.
  */
-public record QuestionRouter( String openApiKey ) implements Function<String, QuestionRouter.Type> {
+public record QuestionRouter( ChatModel chatModel ) implements Function<String, QuestionRouter.Type> {
 
+    public QuestionRouter {
+        requireNonNull(chatModel, "chatModel must not be null");
+    }
 
     public enum Type {
         vectorstore,
@@ -58,18 +63,7 @@ public record QuestionRouter( String openApiKey ) implements Function<String, Qu
     @Override
     public Type apply(String question) {
 
-        ChatModel chatLanguageModel = OpenAiChatModel.builder()
-                .apiKey( openApiKey )
-                .modelName( "gpt-3.5-turbo-0125" )
-                .timeout(Duration.ofMinutes(2))
-                .logRequests(true)
-                .logResponses(true)
-                .maxRetries(2)
-                .temperature(0.0)
-                .maxTokens(2000)
-                .build();
-
-        Service extractor = AiServices.create(Service.class, chatLanguageModel);
+        Service extractor = AiServices.create(Service.class, chatModel);
 
         Result ds = extractor.invoke(question);
         return ds.datasource;

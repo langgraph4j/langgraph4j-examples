@@ -7,12 +7,18 @@ import dev.langchain4j.service.V;
 import java.time.Duration;
 import java.util.List;
 import java.util.function.BiFunction;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * This class provides a service for generating answers to questions using natural language processing.
  * It implements the {@link BiFunction} interface to process question and context inputs and produce an answer.
  */
-public record Generation(String openApiKey)  implements BiFunction<String, List<String>, String> {
+public record Generation(ChatModel chatModel)  implements BiFunction<String, List<String>, String> {
 
+    public Generation {
+        requireNonNull(chatModel, "chatModel must not be null");
+    }
     /**
      * Interface for service implementation that provides capabilities to answer questions based on given context.
      */
@@ -46,18 +52,8 @@ public record Generation(String openApiKey)  implements BiFunction<String, List<
      */
     public String apply( String question, List<String> context) {
 
-        ChatModel chatLanguageModel = OpenAiChatModel.builder()
-                .apiKey( openApiKey )
-                .modelName( "gpt-3.5-turbo" )
-                .timeout(Duration.ofMinutes(2))
-                .logRequests(true)
-                .logResponses(true)
-                .maxRetries(2)
-                .temperature(0.0)
-                .maxTokens(2000)
-                .build();
 
-        Service service = AiServices.create(Service.class, chatLanguageModel);
+        Service service = AiServices.create(Service.class, chatModel);
 
         return service.invoke( question, context ); // service
     }

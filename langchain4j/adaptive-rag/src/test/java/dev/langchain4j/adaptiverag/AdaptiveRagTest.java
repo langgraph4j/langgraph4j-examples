@@ -3,6 +3,8 @@ package dev.langchain4j.adaptiverag;
 import dev.langchain4j.DotEnvConfig;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.chat.ChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.store.embedding.EmbeddingMatch;
@@ -33,10 +35,15 @@ public class AdaptiveRagTest {
         DotEnvConfig.load();
     }
 
-    String getOpenAiKey() {
-        return DotEnvConfig.valueOf("OPENAI_API_KEY")
-                .orElseThrow( () -> new IllegalArgumentException("no OPENAI APIKEY provided!"));
-    }
+    private final ChatModel chatModel = OllamaChatModel.builder()
+            .baseUrl("http://localhost:11434")
+            .modelName( "qwen3.5" )
+            .timeout(Duration.ofMinutes(2))
+            .logRequests(true)
+                .logResponses(true)
+                .maxRetries(2)
+                .temperature(0.0)
+                .build();
 
     String getTavilyApiKey() {
         return DotEnvConfig.valueOf("TAVILY_API_KEY")
@@ -46,7 +53,7 @@ public class AdaptiveRagTest {
     @Test
     public void QuestionRewriterTest() {
 
-        String result = (new QuestionRewriter(getOpenAiKey())).apply("agent memory");
+        String result = (new QuestionRewriter(chatModel)).apply("agent memory");
         assertEquals("What is the role of memory in an agent's functioning?", result);
     }
 
@@ -56,7 +63,7 @@ public class AdaptiveRagTest {
         String openApiKey = DotEnvConfig.valueOf("OPENAI_API_KEY")
                 .orElseThrow( () -> new IllegalArgumentException("no APIKEY provided!"));
 
-        RetrievalGrader grader = new RetrievalGrader(openApiKey);
+        RetrievalGrader grader = new RetrievalGrader(chatModel);
 
         ChromaEmbeddingStore chroma = ChromaEmbeddingStore.builder()
                 .baseUrl("http://localhost:8000")
@@ -109,7 +116,7 @@ public class AdaptiveRagTest {
     @Test
     public void questionRouterTest() {
 
-        QuestionRouter qr = new QuestionRouter(getOpenAiKey());
+        QuestionRouter qr = new QuestionRouter(chatModel);
 
         QuestionRouter.Type result = qr.apply( "What are the stock options?");
 
@@ -124,7 +131,7 @@ public class AdaptiveRagTest {
     @Test
     public void generationTest() {
 
-        ChromaStore retriever = ChromaStore.of(getOpenAiKey());
+        final var retriever = new ChromaStore();
 
         String question = "agent memory";
         EmbeddingSearchResult<TextSegment> relevantDocs = retriever.search(question);
@@ -132,7 +139,7 @@ public class AdaptiveRagTest {
         List<String> docs = relevantDocs.matches().stream()
                                 .map( m -> m.embedded().text() )
                                 .collect(Collectors.toList());
-        Generation qr = new Generation(getOpenAiKey());
+        Generation qr = new Generation(chatModel);
 
         String result = qr.apply( question, docs );
 
@@ -142,7 +149,7 @@ public class AdaptiveRagTest {
     @Test
     public void getGraphTest() throws Exception {
 
-        AdaptiveRag adaptiveRag = new AdaptiveRag(getOpenAiKey(), getTavilyApiKey());
+        AdaptiveRag adaptiveRag = new AdaptiveRag(getTavilyApiKey());
 
         org.bsc.langgraph4j.StateGraph<AdaptiveRag.State> graph = adaptiveRag.buildGraph();
 

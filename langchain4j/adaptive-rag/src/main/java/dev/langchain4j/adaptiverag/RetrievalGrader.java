@@ -10,14 +10,19 @@ import dev.langchain4j.service.SystemMessage;
 import java.time.Duration;
 import java.util.function.Function;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * The RetrievalGrader class implements a function to assess the relevance of a retrieved document
  * to a user's question. It uses an AI service to generate a binary score ('yes' or 'no') indicating relevance.
  * This class relies on external services for processing and grading documents, making it dependent
  * on network availability and the stability of the used API.
  */
-public record RetrievalGrader( String openApiKey ) implements Function<RetrievalGrader.Arguments, RetrievalGrader.Score> {
+public record RetrievalGrader(ChatModel chatModel) implements Function<RetrievalGrader.Arguments, RetrievalGrader.Score> {
 
+    public RetrievalGrader {
+        requireNonNull(chatModel, "chatModel must not be null");
+    }
     /**
      * A static class that represents a score in a binary format.
      * <p>
@@ -71,19 +76,9 @@ public record RetrievalGrader( String openApiKey ) implements Function<Retrieval
     @Override
     public Score apply(Arguments args ) {
 
-        ChatModel chatLanguageModel = OpenAiChatModel.builder()
-                .apiKey( openApiKey )
-                .modelName( "gpt-3.5-turbo-0125" )
-                .timeout(Duration.ofMinutes(2))
-                .logRequests(true)
-                .logResponses(true)
-                .maxRetries(2)
-                .temperature(0.0)
-                .maxTokens(2000)
-                .build();
 
 
-        Service service = AiServices.create(Service.class, chatLanguageModel);
+        Service service = AiServices.create(Service.class, chatModel);
 
         Prompt prompt = StructuredPromptProcessor.toPrompt(args);
 
